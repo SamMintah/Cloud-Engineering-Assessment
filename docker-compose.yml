@@ -1,0 +1,45 @@
+version: "3.9"
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "3001:80" # Map NGINX port to localhost
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "3000:3000" # Map backend port to localhost
+    environment:
+      DB_URI: ${DB_URI} # Load from environment
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  db:
+    image: mongo:5.0
+    container_name: mongodb
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+    ports:
+      - "27017:27017" # Map MongoDB port to localhost
+    volumes:
+      - db-data:/data/db
+    networks:
+      - app-network
+
+volumes:
+  db-data:
+
+networks:
+  app-network:
+    driver: bridge

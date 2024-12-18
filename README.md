@@ -1,40 +1,95 @@
-<p align="center">
-    <img src="https://user-images.githubusercontent.com/62269745/174906065-7bb63e14-879a-4740-849c-0821697aeec2.png#gh-light-mode-only" width="40%">
-    <img src="https://user-images.githubusercontent.com/62269745/174906068-aad23112-20fe-4ec8-877f-3ee1d9ec0a69.png#gh-dark-mode-only" width="40%">
-</p>
+## **Setup Instructions**  
+Follow these steps to build, run, and stop the containers.
 
-# Full-Stack Todo List Application
+### **Prerequisites**  
+1. **Install Docker and Docker Compose**:  
+   - [Docker](https://docs.docker.com/get-docker/)  
+   - [Docker Compose](https://docs.docker.com/compose/install/)  
+2. **Clone the repository**:  
+   ```bash
+   git clone <repository-url>
+   cd <repository-directory>
+   ```  
+3. **Create a `.env` file** in the root directory with the following content:  
+   ```plaintext
+   DB_URI=mongodb://admin:secret@db:27017/Main?authSource=admin
+   MONGO_INITDB_ROOT_USERNAME=admin
+   MONGO_INITDB_ROOT_PASSWORD=secret
+   ```
 
-This repository hosts a full-stack Todo List application designed to allow users to create, manage, and organize their tasks efficiently. The application features a React-based frontend and a Node.js backend, utilizing MongoDB for data persistence.
+4. **Ensure network ports** (8080, 3000, and 27017) are available on your local machine.
 
-## Technologies Used
+---
 
-- **Frontend**: React, Material-UI
-- **Backend**: Node.js, Express
-- **Database**: MongoDB
-- **Other Tools**: Vite, React Toastify, Lucide Icons
+### **Build and Run the Containers**  
+1. **Navigate to the root directory** (where `docker-compose.yml` is located).  
+2. **Build the containers**:  
+   ```bash
+   docker-compose up --build
+   ```  
+   This command will:  
+   - Build and run the frontend, backend, and database services.  
+   - Automatically create a network for communication between the services.  
 
-## Project Structure
+3. **Access the application**:  
+   - **Frontend**: [http://localhost:8080](http://localhost:8080)  
+   - **Backend**: [http://localhost:3000](http://localhost:3000)
 
-The project is divided into two main parts:
-- **Frontend**: Located in the `frontend/` directory with its own [README](frontend/README.md).
-- **Backend**: Located in the `backend/` directory with its own [README](backend/README.md).
+---
 
-## Features
+### **Stop the Containers**  
+To stop the containers, run:  
+```bash
+docker-compose down
+```  
+This stops and removes all containers, networks, and volumes.
 
-- Create, view, update, and delete todo items.
-- Organize tasks with tags/categories.
-- Responsive user interface adaptable to different screen sizes.
-- Real-time updates without page reloads.
+---
 
-## Contributing
+## **Network and Security Configurations**  
 
-Contributions are welcome! See the specific README files in the `frontend/` and `backend/` directories for more details on contributing.
+### **Network Configuration**  
+- A custom bridge network named `app-network` is used for container communication.  
+- **Frontend and Backend Communication**: Containers share the same network, allowing backend API calls from the frontend using `http://backend:3000`.  
+- **Database Communication**: Backend connects to the database using `db` as the hostname.
 
-## Live Demo
+### **Exposed Ports**  
+| Service   | Internal Port | External Port | Purpose                         |  
+|-----------|---------------|---------------|---------------------------------|  
+| Frontend  | 80            | 8080          | Access the frontend UI         |  
+| Backend   | 3000          | 3000          | Access the backend APIs        |  
+| Database  | 27017         | 27017         | For local MongoDB inspection   |  
 
-<h4 align="left">Live Preview is available at https://fullstack-todolist-1.onrender.com/</h4>
+### **Security Settings**  
+1. **Database Credentials**: Stored in `.env` and injected as environment variables.  
+   - `MONGO_INITDB_ROOT_USERNAME`: Admin username for MongoDB.  
+   - `MONGO_INITDB_ROOT_PASSWORD`: Admin password for MongoDB.  
+2. **Database URI**: Uses `db` as the hostname, ensuring it’s only accessible within the Docker network.
 
-## Snapshots
+---
 
-<img src="./Frontend/src/assets/home-snapshot.png" alt="home page"/>
+## **Troubleshooting Guide**  
+
+### **Issue 1: MongoDB Fails with Exit Code 62**  
+**Solution**:  
+- Ensure the `MONGO_INITDB_ROOT_USERNAME` and `MONGO_INITDB_ROOT_PASSWORD` are correctly set in the `.env` file.  
+- Restart the containers:  
+  ```bash
+  docker-compose down
+  docker-compose up --build
+  ```  
+
+### **Issue 2: Backend Fails to Connect to MongoDB**  
+**Solution**:  
+- Ensure `DB_URI` in `.env` points to `db` (not `localhost`) as the database hostname:  
+  ```plaintext
+  DB_URI=mongodb://admin:secret@db:27017/Main?authSource=admin
+  ```  
+
+### **Issue 3: Frontend Shows “Service Unavailable”**  
+**Solution**:  
+- Confirm the backend is running: [http://localhost:3000](http://localhost:3000).  
+- Check logs for errors:  
+  ```bash
+  docker-compose logs backend
+  ```
