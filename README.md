@@ -32,7 +32,7 @@ Follow these steps to build, run, and stop the containers.
    - Automatically create a network for communication between the services.  
 
 3. **Access the application**:  
-   - **Frontend**: [http://localhost:8080](http://localhost:8080)  
+   - **Frontend**: [http://localhost:3001](http://localhost:3001)  
    - **Backend**: [http://localhost:3000](http://localhost:3000)
 
 ---
@@ -56,7 +56,7 @@ This stops and removes all containers, networks, and volumes.
 ### **Exposed Ports**  
 | Service   | Internal Port | External Port | Purpose                         |  
 |-----------|---------------|---------------|---------------------------------|  
-| Frontend  | 80            | 8080          | Access the frontend UI         |  
+| Frontend  | 80            | 3001          | Access the frontend UI         |  
 | Backend   | 3000          | 3000          | Access the backend APIs        |  
 | Database  | 27017         | 27017         | For local MongoDB inspection   |  
 
