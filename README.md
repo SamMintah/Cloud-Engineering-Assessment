@@ -24,7 +24,7 @@ MONGO_INITDB_ROOT_USERNAME=admin
 MONGO_INITDB_ROOT_PASSWORD=secret
 ```
 
-Ensure that network ports (8080, 3000, and 27017) are available on your local machine.
+Ensure that network ports (3001, 3000, and 27017) are available on your local machine.
 
 ---
 
